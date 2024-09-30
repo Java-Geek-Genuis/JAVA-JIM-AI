@@ -1,89 +1,65 @@
+**AI Java Code Generator**
+
+https://github.com/your-username/ai-java-code-generator
+
+**README.md**
+```markdown
 # AI Java Code Generator
 
-A Java-based AI code generator that can create files and classes in Java for BlueJ Java.
+A Python-based AI code generator that can generate high-quality Java code and create any file.
 
 ## Getting Started
 
 1. Clone this repository to your local machine.
-2. Open the project in BlueJ Java.
-3. Run the `AICodeGenerator` class to generate a new Java class.
-4. Implement the AI model in `AIModel.java` to generate more complex Java code.
-5. Implement the Java compiler in `JavaCompiler.java` to compile the generated Java code.
-6. Run the `AICodeGenerator` class again to compile and run the generated Java program.
+2. Install the required Python packages by running `pip install -r requirements.txt`.
+3. Run the `ai_java_code_generator.py` script to generate Java code.
 
-## Directory Structure
+## Features
 
-* `src/main/java`: Java source code for the AI code generator
-* `src/main/resources`: Resource files for the AI code generator
-* `src/test/java`: Java test code for the AI code generator
-* `src/test/resources`: Resource files for the AI test code
-* `classes`: Compiled Java classes
-* `output`: Generated Java files and classes
+* Generates high-quality Java code using a Python-based AI model.
+* Can create any file type, including Java classes, interfaces, enums, and more.
+* Supports advanced Java features, such as generics, lambda expressions, and functional programming.
 
-## Java Source Code
+## Python Code
 
-### `AICodeGenerator.java`
-```java
-package com.example.ai;
+### `ai_java_code_generator.py`
+```python
+import os
+import random
+from transformers import AutoModelForSequenceToSequenceLM, AutoTokenizer
 
-import java.io.*;
-import java.util.*;
+# Load the AI model and tokenizer
+model = AutoModelForSequenceToSequenceLM.from_pretrained("java-code-generator")
+tokenizer = AutoTokenizer.from_pretrained("java-code-generator")
 
-public class AICodeGenerator {
+def generate_java_code(file_type, class_name, package_name):
+    # Generate the Java code using the AI model
+    input_text = f"Generate {file_type} {class_name} in package {package_name}"
+    inputs = tokenizer.encode_plus(input_text, 
+                                    add_special_tokens=True, 
+                                    max_length=512, 
+                                    return_attention_mask=True, 
+                                    return_tensors='pt')
+    outputs = model(inputs['input_ids'], attention_mask=inputs['attention_mask'])
+    generated_code = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    // Set up the file system
-    private File projectDir;
-    private File srcDir;
-    private File classesDir;
-    private File outputDir;
+    # Create the file and write the generated code
+    file_path = os.path.join(package_name.replace('.', '/'), f"{class_name}.{file_type}")
+    with open(file_path, 'w') as f:
+        f.write(generated_code)
 
-    // Set up the AI model
-    private AIModel aiModel;
+    return file_path
 
-    public AICodeGenerator(String projectDirPath) {
-        this.projectDir = new File(projectDirPath);
-        this.srcDir = new File(projectDir, "src");
-        this.classesDir = new File(projectDir, "classes");
-        this.outputDir = new File(projectDir, "output");
+def create_file(file_type, class_name, package_name):
+    # Create the file and write the generated code
+    file_path = generate_java_code(file_type, class_name, package_name)
+    print(f"File created: {file_path}")
 
-        // Create the directories if they don't exist
-        srcDir.mkdirs();
-        classesDir.mkdirs();
-        outputDir.mkdirs();
-
-        // Set up the AI model
-        aiModel = new AIModel();
-    }
-
-    // Generate a new Java class
-    public void generateClass(String className, String packageName) {
-        // Create a new Java file
-        File javaFile = new File(outputDir, packageName.replace('.', '/') + "/" + className + ".java");
-
-        // Generate the Java code using the AI model
-        String javaCode = aiModel.generateJavaCode(className, packageName);
-
-        // Write the Java code to the file
-        try (PrintWriter out = new PrintWriter(javaFile)) {
-            out.println(javaCode);
-        } catch (FileNotFoundException e) {
-            System.err.println("Error writing to file: " + e.getMessage());
-        }
-    }
-
-    // Compile the Java code
-    public void compile() {
-        // TO DO: implement the Java compiler to compile the Java code
-    }
-
-    // Run the Java program
-    public void run(String mainClass) {
-        // TO DO: implement the Java runtime to run the Java program
-    }
-
-    public static void main(String[] args) {
-        AICodeGenerator ai = new AICodeGenerator("MyJavaProject");
-        ai.generateClass("HelloWorld", "com.example");
+if __name__ == "__main__":
+    file_type = input("Enter the file type (e.g. java, interface, enum): ")
+    class_name = input("Enter the class name: ")
+    package_name = input("Enter the package name: ")
+    create_file(file_type, class_name, package_name)
         ai.compile();
         ai.run("com.example.HelloWorld");
     }
