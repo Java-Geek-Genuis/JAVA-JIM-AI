@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Java Jim</title>
+  </head>
+  <body>
+    <h1>Java Jim</h1>
+    <form action="" method="post">
+      <label for="file_type">File Type:</label>
+      <input type="text" id="file_type" name="file_type"><br><br>
+      <label for="class_name">Class Name:</label>
+      <input type="text" id="class_name" name="class_name"><br><br>
+      <label for="package_name">Package Name:</label>
+      <input type="text" id="package_name" name="package_name"><br><br>
+      <input type="submit" value="Generate Code">
+    </form>
+  </body>
+</html>
+
+<!-- result.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Java Jim</title>
+  </head>
+  <body>
+    <h1>Java Jim</h1>
+    <p>Generated Code:</p>
+    <pre>{{ file_path }}</pre>
+    <p><a href="{{ url_for('download', file_path=file_path) }}">Download</a></p>
+  </body>
+</html>
