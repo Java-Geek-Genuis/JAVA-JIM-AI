@@ -1,18 +1,19 @@
-**AI Java Code Generator**
+**Java Jim**
 
-https://github.com/your-username/ai-java-code-generator
+https://github.com/your-username/javajim
 
 **README.md**
 ```markdown
-# AI Java Code Generator
+# Java Jim
 
 A Python-based AI code generator that can generate high-quality Java code and create any file.
 
 ## Getting Started
 
-1. Clone this repository to your local machine.
-2. Install the required Python packages by running `pip install -r requirements.txt`.
-3. Run the `ai_java_code_generator.py` script to generate Java code.
+1. Open this repository in a GitHub Codespace.
+2. Click on the "Run" button to start the Java Jim web application.
+3. Enter the file type, class name, and package name in the input fields.
+4. Click on the "Generate Code" button to generate the Java code.
 
 ## Features
 
@@ -22,45 +23,57 @@ A Python-based AI code generator that can generate high-quality Java code and cr
 
 ## Python Code
 
-### `ai_java_code_generator.py`
+### `app.py`
 ```python
 import os
 import random
 from transformers import AutoModelForSequenceToSequenceLM, AutoTokenizer
+from flask import Flask, request, render_template
+
+app = Flask(__name__)
 
 # Load the AI model and tokenizer
 model = AutoModelForSequenceToSequenceLM.from_pretrained("java-code-generator")
 tokenizer = AutoTokenizer.from_pretrained("java-code-generator")
 
-def generate_java_code(file_type, class_name, package_name):
-    # Generate the Java code using the AI model
-    input_text = f"Generate {file_type} {class_name} in package {package_name}"
-    inputs = tokenizer.encode_plus(input_text, 
-                                    add_special_tokens=True, 
-                                    max_length=512, 
-                                    return_attention_mask=True, 
-                                    return_tensors='pt')
-    outputs = model(inputs['input_ids'], attention_mask=inputs['attention_mask'])
-    generated_code = tokenizer.decode(outputs[0], skip_special_tokens=True)
+class JavaJim:
+    def __init__(self):
+        self.model = model
+        self.tokenizer = tokenizer
 
-    # Create the file and write the generated code
-    file_path = os.path.join(package_name.replace('.', '/'), f"{class_name}.{file_type}")
-    with open(file_path, 'w') as f:
-        f.write(generated_code)
+    def generate_java_code(self, file_type, class_name, package_name):
+        # Generate the Java code using the AI model
+        input_text = f"Generate {file_type} {class_name} in package {package_name}"
+        inputs = self.tokenizer.encode_plus(input_text, 
+                                            add_special_tokens=True, 
+                                            max_length=512, 
+                                            return_attention_mask=True, 
+                                            return_tensors='pt')
+        outputs = self.model(inputs['input_ids'], attention_mask=inputs['attention_mask'])
+        generated_code = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    return file_path
+        # Create the file and write the generated code
+        file_path = os.path.join(package_name.replace('.', '/'), f"{class_name}.{file_type}")
+        with open(file_path, 'w') as f:
+            f.write(generated_code)
 
-def create_file(file_type, class_name, package_name):
-    # Create the file and write the generated code
-    file_path = generate_java_code(file_type, class_name, package_name)
-    print(f"File created: {file_path}")
+        return file_path
 
-if __name__ == "__main__":
-    file_type = input("Enter the file type (e.g. java, interface, enum): ")
-    class_name = input("Enter the class name: ")
-    package_name = input("Enter the package name: ")
-    create_file(file_type, class_name, package_name)
-        ai.compile();
-        ai.run("com.example.HelloWorld");
-    }
-}
+    def create_file(self, file_type, class_name, package_name):
+        # Create the file and write the generated code
+        file_path = self.generate_java_code(file_type, class_name, package_name)
+        return file_path
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        file_type = request.form['file_type']
+        class_name = request.form['class_name']
+        package_name = request.form['package_name']
+        javajim = JavaJim()
+        file_path = javajim.create_file(file_type, class_name, package_name)
+        return render_template('result.html', file_path=file_path)
+    return render_template('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
