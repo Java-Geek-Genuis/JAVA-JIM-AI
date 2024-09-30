@@ -1,0 +1,15 @@
+<!-- game_result.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Java Jim</title>
+  </head>
+  <body>
+    <h1>Java Jim</h1>
+    <p>Generated Game:</p>
+    <pre>{{ jar_file_path }}</pre>
+    <p><a href="{{ url_for('download', file_path=jar_file_path) }}">Download</a></p>
+    <pre>{{ batch_file_path }}</pre>
+    <p><a href="{{ url_for('download', file_path=batch_file_path) }}">Download</a></p>
+  </body>
+</html>
